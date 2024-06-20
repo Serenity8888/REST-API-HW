@@ -32,9 +32,16 @@ const subscriptionValidation = Joi.object({
   subscription: Joi.string().valid("starter", "pro", "business"),
 });
 
-export {
-  contactValidation,
-  favoriteValidation,
-  signupValidation,
-  subscriptionValidation,
-};
+// validation for email
+const emailValidation = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required()
+    .messages({
+      "any.required": "Missing required email field",
+      "string.email": "Invalid email format",
+    }),
+});
+
+// prettier-ignore
+export { contactValidation, favoriteValidation, signupValidation, subscriptionValidation, emailValidation };

@@ -2,10 +2,13 @@
 
 This repository contains my homework for GoIT Node.js course.
 
-### Homework 5 - Work with Images and Testing
+### Homework 6 - Email and WebSockets
 
-- PATCH /users/avatar - upload avatar image
-  ![Upload image avatar](./screenshots/upload_avatar.png "Upload image avatar")
+- GET /users/verify/:verificationToken - verification of email
+  ![Verify Email](./screenshots/verify_email.png "Verify Email")
 
-- Unit tests for login
-  ![Unit tests for login](./screenshots/login_test.png "Unit tests for login")
+- POST /users/signup - registration of user with token
+  ![Register User](./screenshots/register_with_verification.png "Register User")
+
+- POST /users/verify - Resend verification email
+  ![Resend Verification Email](./screenshots/resend_verification_email.png "Resend Verification Email")

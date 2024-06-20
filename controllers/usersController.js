@@ -7,10 +7,12 @@ import path from "path";
 import fs from "fs/promises";
 import { User } from "../models/usersModel.js";
 // prettier-ignore
-import { signupValidation, subscriptionValidation } from "../validations/validation.js";
+import { emailValidation, signupValidation, subscriptionValidation } from "../validations/validation.js";
 import { httpError } from "../helpers/httpError.js";
+import { v4 as uuid4 } from "uuid";
+import { sendEmail } from "../helpers/sendEmail.js";
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, PORT } = process.env;
 
 const signupUser = async (req, res) => {
   const { email, password } = req.body;
@@ -32,10 +34,25 @@ const signupUser = async (req, res) => {
   // Create a link to the user's avatar with gravatar
   const avatarURL = gravatar.url(email, { protocol: "http" });
 
+  // Create a verificationToken for the user
+  const verificationToken = uuid4();
+
   const newUser = await User.create({
     email,
     password: hashPassword,
     avatarURL,
+    verificationToken,
+  });
+
+  // Send an email to the user's mail and specify a link to verify the email (/users/verify/:verificationToken) in the message
+  await sendEmail({
+    to: email,
+    subject: "Action Required: Verify Your Email",
+    html: `
+      <h1>Email Verification</h1>
+      <p>Click the link below to verify your email address:</p>
+      <a href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Verify Email</a>
+    `,
   });
 
   // Registration success response
@@ -44,6 +61,7 @@ const signupUser = async (req, res) => {
       email: newUser.email,
       subscription: newUser.subscription,
       avatarURL: newUser.avatarURL,
+      verificationToken: newUser.verificationToken,
     },
   });
 };
@@ -143,5 +161,68 @@ const updateAvatar = async (req, res) => {
   res.status(200).json({ avatarURL });
 };
 
+const verifyEmail = async (req, res) => {
+  const { verificationToken } = req.params;
+
+  const user = await User.findOne({
+    verificationToken,
+  });
+
+  if (!user) {
+    throw httpError(404, "User not found");
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: null,
+  });
+
+  // Verification success response
+  res.json({
+    message: "Verification successful",
+  });
+};
+
+const resendVerifyEmail = async (req, res) => {
+  const { email } = req.body;
+
+  const { error } = emailValidation.validate(req.body);
+
+  if (error) {
+    throw httpError(400, error.message);
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw httpError(404, "User not found");
+  }
+
+  if (user.verify) {
+    throw httpError(400, "Verification has already been passed");
+  }
+
+  const verificationToken = uuid4();
+
+  await User.findByIdAndUpdate(user._id, {
+    verificationToken,
+  });
+
+  await sendEmail({
+    to: email,
+    subject: "Action Required: Verify Your Email",
+    html: `
+      <h1>Email Verification</h1>
+      <p>Click the link below to verify your email address:</p>
+      <a href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Verify Email</a>
+    `,
+  });
+
+  // Resend verification success response
+  res.json({
+    message: "Verification email sent",
+  });
+};
+
 // prettier-ignore
-export { signupUser, loginUser, logoutUser, getCurrentUsers, updateUserSubscription, updateAvatar};
+export { signupUser, loginUser, logoutUser, getCurrentUsers, updateUserSubscription, updateAvatar, verifyEmail, resendVerifyEmail };
