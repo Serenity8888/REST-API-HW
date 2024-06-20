@@ -2,16 +2,10 @@
 
 This repository contains my homework for GoIT Node.js course.
 
-### Homework 4 - Authentication and Authorization
+### Homework 5 - Work with Images and Testing
 
-- POST /users/login - login user with email and password
-  ![Login User](./screenshots/login.png "Login User")
+- PATCH /users/avatar - upload avatar image
+  ![Upload image avatar](./screenshots/upload_avatar.png "Upload image avatar")
 
-- GET /users/logout - logout user
-  ![Logout User](./screenshots/logout.png "Logout User")
-
-- POST /users/signup - create new user
-  ![Create New User](./screenshots/register.png "Create New User")
-
-- GET /users/current - get current user
-  ![Get Current User](./screenshots/current_user.png "Get Current User")
+- Unit tests for login
+  ![Unit tests for login](./screenshots/login_test.png "Unit tests for login")
