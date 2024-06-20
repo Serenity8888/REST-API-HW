@@ -2,7 +2,16 @@
 
 This repository contains my homework for GoIT Node.js course.
 
-### Homework 3 - REST API MongoDB and Mongoose
+### Homework 4 - Authentication and Authorization
 
-- PATCH /contacts/:contactId/favorite - update favorite contact
-  ![Add Favorite Contacts](./screenshots/add_fav_contact.png "Add Favorite Contacts")
+- POST /users/login - login user with email and password
+  ![Login User](./screenshots/login.png "Login User")
+
+- GET /users/logout - logout user
+  ![Logout User](./screenshots/logout.png "Logout User")
+
+- POST /users/signup - create new user
+  ![Create New User](./screenshots/register.png "Create New User")
+
+- GET /users/current - get current user
+  ![Get Current User](./screenshots/current_user.png "Get Current User")
