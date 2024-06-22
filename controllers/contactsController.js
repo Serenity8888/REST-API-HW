@@ -93,4 +93,4 @@ const updateStatusContact = async (req, res) => {
 };
 
 // prettier-ignore
-export { getAllContacts, getContactById, addContact, deleteContactById, updateContactById, updateStatusContact};
+export { getAllContacts, getContactById, addContact, deleteContactById, updateContactById, updateStatusContact };;
