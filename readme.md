@@ -6,3 +6,6 @@ This repository contains my homework for GoIT Node.js course.
 
 - PATCH /contacts/:contactId/favorite - update favorite contact
   ![Add Favorite Contacts](./screenshots/add_fav_contact.png "Add Favorite Contacts")
+
+  MONGO DB
+  ![Mongo Database](./screenshots/mongo_db.png "Mongo Database")
